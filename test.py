@@ -2,6 +2,64 @@ import numpy as np
 import random as rd
 import matplotlib.pyplot as plt
 
+class volume:
+    '''
+    Définit une classe d'objets 3D servant de volumes unitaires dans le calcul
+    d'effet gravimétrique de terrain.
+    '''
+    def __init__(self,density):
+        
+        self.density = density
+        
+        
+    
+class prism(volume):
+    ''' 
+    Type de volume simple ppermettant de calculer des effets gravimétriques de
+    terrain.
+    
+    -shape : taille planimétrique du prisme
+    -height : hauteur du prisme récupérée dans le MNT
+    '''
+    
+    def __init__(self,shape,height,density):
+        
+        super().__init__(density)
+        self.shape = shape
+        self.size = self.shape[0]*self.shape[1]
+        self.height = height
+        
+    def attraction_gravi(self,r,dz):
+        ''' 
+        Calcul l'attarction gravitationnelle d'un prisme en fonction d'une 
+        distance et d'une dénivelée
+        '''
+        
+        volume = self.size * self.height
+        mass = volume * self.density
+        
+        g = G * mass /r**2 * dz/r # dz/r --> Direction component 
+        
+        return g
+        
+        
+class Grid:
+    
+    ''' 
+    Définit la grille représentant l'espace dans lequel on observe le champ
+    de pesanteur.
+    
+    - X : largeur de la grille
+    - Y : longueur de la grille
+    - stations : liste des stations gravimétriques à traiter
+    '''
+    
+    def __init__(self,length,width,stations):
+        
+        self.length = length
+        self.width = width
+        self.stations = stations
+    
        
 def masque_adap(grid,seuil):
     
@@ -17,11 +75,18 @@ def masque_adap(grid,seuil):
             else:
                 masque[i, j] = 1/d
                 
-    mnt_filtre = grid*masque
     
-    return mnt_filtre
+    
+    return masque
+
+
+            
+            
+    
 
 if __name__ == "__main__":
+    
+    G = 6.67430e-11   # Constante gravitationnelle
     
     n = 20
 
